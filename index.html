@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExpenseFlow - Smart Financial Control for Modern Businesses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --primary-light: #3b82f6;
+      --secondary: #f1f5f9;
+      --background: #f8fafc;
+      --text: #1e293b;
+      --gray: #64748b;
+      --gray-light: #94a3b8;
+      --white: #fff;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    
+    /* Smooth animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    .fade-in-delay-1 { animation-delay: 0.2s; }
+    .fade-in-delay-2 { animation-delay: 0.4s; }
+    .fade-in-delay-3 { animation-delay: 0.6s; }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    /* Navbar */
+    nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    nav.scrolled {
+      background: rgba(255, 255, 255, 0.98);
+      padding: 0.8rem 2rem;
+    }
+    
+    .logo {
+      font-weight: 800;
+      font-size: 1.8rem;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo i {
+      font-size: 2rem;
+      animation: pulse 2s infinite;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 0.5rem 0;
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    
+    .nav-cta {
+      background: var(--primary);
+      color: var(--white) !important;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-cta:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    .nav-cta::after {
+      display: none;
+    }
+    
+    /* Mobile menu */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+      padding: 0.5rem;
+    }
+    
+    .nav-toggle span {
+      width: 25px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        gap: 1.5rem;
+      }
+      
+      .nav-links.active {
+        display: flex;
+      }
+      
+      .nav-toggle {
+        display: flex;
+      }
+    }
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, #1e3a8a 100%);
+      color: var(--white);
+      padding: 8rem 2rem 6rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-top: 80px;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .cta-btn {
+      background: var(--white);
+      color: var(--primary);
+      font-weight: 700;
+      padding: 1.2rem 2.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .cta-btn:hover {
+      background: var(--primary);
+      color: var(--white);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .cta-btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+    }
+    
+    .cta-btn-secondary:hover {
+      background: var(--white);
+      color: var(--primary);
+    }
+    
+    .hero-image {
+      margin-top: 4rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .hero-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: var(--shadow-hover);
+    }
+    /* Features Section */
+    .features {
+      padding: 6rem 2rem;
+      background: var(--white);
+      position: relative;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--text);
+      letter-spacing: -1px;
+    }
+    
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2.5rem;
+    }
+    
+    .feature-card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem auto;
+      color: var(--white);
+      font-size: 2rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .feature-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    
+    .feature-card p {
+      color: var(--gray);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-list {
+      list-style: none;
+      text-align: left;
+    }
+    
+    .feature-list li {
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .feature-list li i {
+      color: var(--success);
+      font-size: 0.9rem;
+    }
+    /* Stats Section */
+    .stats {
+      background: var(--secondary);
+      padding: 4rem 2rem;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .stat-card {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      font-size: 1.1rem;
+      color: var(--gray);
+      font-weight: 600;
+    }
+    
+    /* Workflow Section */
+    .workflow {
+      padding: 6rem 2rem;
+      background: var(--white);
+    }
+    
+    .workflow-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    
+    .workflow-step {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .workflow-step:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .workflow-step::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -1rem;
+      width: 2rem;
+      height: 2px;
+      background: var(--primary);
+      transform: translateY(-50%);
+    }
+    
+    .workflow-step:last-child::after {
+      display: none;
+    }
+    
+    .workflow-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem auto;
+      color: var(--white);
+      font-size: 1.8rem;
+    }
+    
+    .workflow-step h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    
+    .workflow-step p {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+    
+    /* About Section */
+    .about {
+      padding: 6rem 2rem;
+      background: var(--secondary);
+    }
+    
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .about-text h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+    
+    .about-text p {
+      font-size: 1.1rem;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    
+    .about-features {
+      list-style: none;
+      margin-top: 2rem;
+    }
+    
+    .about-features li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .about-features i {
+      width: 24px;
+      height: 24px;
+      background: var(--success);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+    
+    .about-image {
+      position: relative;
+    }
+    
+    .about-image img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    /* Footer */
+    footer {
+      background: var(--text);
+      color: var(--white);
+      padding: 3rem 2rem 1rem 2rem;
+      margin-top: auto;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+    
+    .footer-section h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--white);
+    }
+    
+    .footer-section p {
+      color: var(--gray-light);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+    
+    .footer-links a {
+      color: var(--gray-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary-light);
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .social-links a:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid #374151;
+      padding-top: 2rem;
+      text-align: center;
+      color: var(--gray-light);
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .workflow-steps {
+        grid-template-columns: 1fr;
+      }
+      
+      .workflow-step::after {
+        display: none;
+      }
+      
+      nav {
+        padding: 1rem;
+      }
+      
+      .hero {
+        padding: 6rem 1rem 4rem 1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .cta-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="logo">
+      <i class="fas fa-bolt"></i>
+      ExpenseFlow
+    </div>
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a href="#demo" class="nav-cta">Try Demo</a>
+    </div>
+    <div class="nav-toggle" id="navToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <section class="hero" id="home">
+    <div class="hero-content fade-in">
+      <h1>ExpenseFlow: The Future of Financial Management</h1>
+      <div class="hero-subtitle fade-in-delay-1">AI-Powered Expense Management Revolution</div>
+      <p class="fade-in-delay-2">Transform your expense workflow with intelligent automation, seamless approvals, and real-time analytics. Built for the modern enterprise with cutting-edge AI and machine learning capabilities.</p>
+      <div class="hero-buttons fade-in-delay-3">
+        <a href="#demo" class="cta-btn">
+          <i class="fas fa-rocket"></i>
+          Get Started Free
+        </a>
+        <a href="#features" class="cta-btn cta-btn-secondary">
+          <i class="fas fa-play"></i>
+          Watch Demo
+        </a>
+      </div>
+    </div>
+    <div class="hero-image fade-in-delay-3">
+      <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="ExpenseFlow Dashboard Preview" />
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card fade-in">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Processing Accuracy</div>
+        </div>
+        <div class="stat-card fade-in-delay-1">
+          <div class="stat-number">1000+</div>
+          <div class="stat-label">Happy Clients</div>
+        </div>
+        <div class="stat-card fade-in-delay-2">
+          <div class="stat-number">$50M+</div>
+          <div class="stat-label">Expenses Managed</div>
+        </div>
+        <div class="stat-card fade-in-delay-3">
+          <div class="stat-number">5 Sec</div>
+          <div class="stat-label">Average Processing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title fade-in">Powerful Features</h2>
+        <p class="section-subtitle fade-in-delay-1">Everything you need to manage expenses efficiently and transparently</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Authentication & User Management</h3>
+          <p>Secure login system with role-based access control, multi-factor authentication, and seamless user onboarding.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Multi-factor Authentication</li>
+            <li><i class="fas fa-check"></i> Role-based Permissions</li>
+            <li><i class="fas fa-check"></i> Single Sign-On (SSO)</li>
+            <li><i class="fas fa-check"></i> User Activity Tracking</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card fade-in-delay-1">
+          <div class="feature-icon">
+            <i class="fas fa-file-upload"></i>
+          </div>
+          <h3>Smart Expense Submission</h3>
+          <p>AI-powered expense capture with instant receipt scanning, smart categorization, and predictive field completion.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> AI Receipt Recognition</li>
+            <li><i class="fas fa-check"></i> Smart Auto-categorization</li>
+            <li><i class="fas fa-check"></i> Voice-to-Text Descriptions</li>
+            <li><i class="fas fa-check"></i> Predictive Data Entry</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card fade-in-delay-2">
+          <div class="feature-icon">
+            <i class="fas fa-route"></i>
+          </div>
+          <h3>Intelligent Approval Workflow</h3>
+          <p>Customizable multi-level approval processes with automated routing and real-time notifications.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Multi-level Approvals</li>
+            <li><i class="fas fa-check"></i> Automated Routing</li>
+            <li><i class="fas fa-check"></i> Real-time Notifications</li>
+            <li><i class="fas fa-check"></i> Approval History</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h3>Conditional Approval Rules</h3>
+          <p>Set up intelligent rules for automatic approvals based on amount, category, user, and custom criteria.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Amount-based Rules</li>
+            <li><i class="fas fa-check"></i> Category-specific Logic</li>
+            <li><i class="fas fa-check"></i> User-based Permissions</li>
+            <li><i class="fas fa-check"></i> Custom Rule Builder</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card fade-in-delay-1">
+          <div class="feature-icon">
+            <i class="fas fa-eye"></i>
+          </div>
+          <h3>Next-Gen OCR Technology</h3>
+          <p>Revolutionary AI-powered OCR with blockchain verification, supporting 50+ languages and 99.8% accuracy.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> 99.8% OCR Accuracy</li>
+            <li><i class="fas fa-check"></i> 50+ Language Support</li>
+            <li><i class="fas fa-check"></i> Blockchain Verification</li>
+            <li><i class="fas fa-check"></i> Real-time Fraud Detection</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card fade-in-delay-2">
+          <div class="feature-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3>Predictive Analytics & AI Insights</h3>
+          <p>Machine learning-powered analytics with predictive spending forecasts and intelligent budget recommendations.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> AI-Powered Dashboards</li>
+            <li><i class="fas fa-check"></i> Predictive Forecasting</li>
+            <li><i class="fas fa-check"></i> Anomaly Detection</li>
+            <li><i class="fas fa-check"></i> Smart Budget Alerts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="workflow" id="workflow">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title fade-in">Approval Workflow</h2>
+        <p class="section-subtitle fade-in-delay-1">Streamlined process from submission to reimbursement</p>
+      </div>
+      <div class="workflow-steps">
+        <div class="workflow-step fade-in">
+          <div class="workflow-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <h3>Employee Submission</h3>
+          <p>Submit expenses with receipts through web or mobile app</p>
+        </div>
+        
+        <div class="workflow-step fade-in-delay-1">
+          <div class="workflow-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h3>Manager Review</h3>
+          <p>Direct manager reviews and approves or rejects expenses</p>
+        </div>
+        
+        <div class="workflow-step fade-in-delay-2">
+          <div class="workflow-icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <h3>Finance Verification</h3>
+          <p>Finance team verifies compliance and budget allocation</p>
+        </div>
+        
+        <div class="workflow-step fade-in-delay-3">
+          <div class="workflow-icon">
+            <i class="fas fa-crown"></i>
+          </div>
+          <h3>Final Approval</h3>
+          <p>Director provides final approval for high-value expenses</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <h2 class="fade-in">Why Choose ExpenseFlow?</h2>
+          <p class="fade-in-delay-1">
+            ExpenseFlow is engineered for the digital-first enterprise, combining artificial intelligence, 
+            machine learning, and blockchain security to create the most advanced expense management platform available.
+          </p>
+          <p class="fade-in-delay-2">
+            From innovative startups to Fortune 500 companies, ExpenseFlow adapts to your unique workflows while 
+            ensuring compliance, transparency, and real-time financial visibility across your organization.
+          </p>
+          <ul class="about-features">
+            <li class="fade-in-delay-3">
+              <i class="fas fa-check"></i>
+              Enterprise-grade security and compliance
+            </li>
+            <li class="fade-in-delay-3">
+              <i class="fas fa-check"></i>
+              24/7 customer support and onboarding
+            </li>
+            <li class="fade-in-delay-3">
+              <i class="fas fa-check"></i>
+              Seamless integration with existing systems
+            </li>
+            <li class="fade-in-delay-3">
+              <i class="fas fa-check"></i>
+              Customizable workflows and reporting
+            </li>
+          </ul>
+        </div>
+        <div class="about-image fade-in-delay-2">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="ExpenseFlow Analytics Dashboard" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>ExpenseFlow</h3>
+        <p>
+          Pioneering the future of financial operations with AI-driven automation, 
+          intelligent workflows, and predictive analytics for modern enterprises.
+        </p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-github"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Product</h3>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#workflow">Workflow</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#integrations">Integrations</a></li>
+          <li><a href="#api">API Documentation</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Company</h3>
+        <ul class="footer-links">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#careers">Careers</a></li>
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="#press">Press</a></li>
+          <li><a href="#partners">Partners</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Support</h3>
+        <ul class="footer-links">
+          <li><a href="#help">Help Center</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#terms">Terms of Service</a></li>
+          <li><a href="#security">Security</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 ExpenseFlow | Hackathon X IITG Winner | Revolutionizing Financial Management with ❤️ and AI</p>
+    </div>
+  </footer>
+</body>
+</html>
