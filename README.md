@@ -3,7 +3,6 @@
   <img src="https://static.wixstatic.com/media/ea7b79_1d3f5d7f56e94e0597f2b7f7d3550c2e~mv2.gif" alt="ExpensoX Logo" width="160"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/Odoo_logo.png" alt="Odoo Logo" width="120" style="margin:0 40px"/>
   <br>
-  <img src="https://media.giphy.com/media/l0MYGBxB5GJ5pQmbG/giphy.gif" alt="Animated Design" width="120"/>
 </p>
 
 <h1 align="center">OdooXamalthea - ExpensoX</h1>
